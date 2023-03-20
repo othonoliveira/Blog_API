@@ -1,6 +1,5 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    console.log('test');
     await queryInterface.createTable('blog_posts', {
       id: {
         allowNull: false,
