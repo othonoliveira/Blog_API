@@ -3,7 +3,6 @@ const generateToken = require('../auth/generateToken');
 
 const logIn = async ({ email, password }) => {
   const user = await User.findOne({ where: { email, password } });
-  console.log(user);
 
   if (!user) return { status: 400, message: 'Invalid fields' };
 
