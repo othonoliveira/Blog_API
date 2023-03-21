@@ -4,7 +4,7 @@ const { User } = require('../models');
 
 const addUser = async ({ displayName, email, password, image }) => {
   const { status, message } = userValidation({ displayName, email, password });
-  console.log(status);
+
   if (message) return { status, message };
   const tryUser = await User.findOne({ where: { email } });
   if (tryUser) return { status: 409, message: 'User already registered' };
@@ -24,7 +24,8 @@ const getAllUsers = async () => {
 };
 
 const getUserById = async (id) => {
-  const user = await User.findByPk(id);
+  const user = await User.findOne({ where: { id }, attributes: { exclude: ['password'] } });
+  if (!user) return { status: 404, message: 'User does not exist' };
 
   return { status: 200, user };
 };

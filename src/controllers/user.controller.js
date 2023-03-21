@@ -21,7 +21,23 @@ const getAllUsers = async (req, res) => {
   return res.status(200).json(response.users);
 };
 
+const getUserById = async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const { status, message, user } = await userService.getUserById(id);
+
+  if (message) return res.status(status).json({ message });
+
+  return res.status(200).json(user);
+};
+
 module.exports = {
   addUser,
   getAllUsers,
+  getUserById,
 };
