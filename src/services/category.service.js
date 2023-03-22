@@ -1,5 +1,12 @@
 const { Category } = require('../models');
 
+const getCategoryById = async (id) => {
+  const response = await Category.findByPk(id);
+  if (!response) return 'CATEGORY_NOT_FOUND';
+
+  return response;
+};
+
 const getAllCategories = async () => {
   const response = await Category.findAll({ order: [['id', 'ASC']] });
 
@@ -16,4 +23,5 @@ const addCategory = async (name) => {
 module.exports = {
   addCategory,
   getAllCategories,
+  getCategoryById,
 };
