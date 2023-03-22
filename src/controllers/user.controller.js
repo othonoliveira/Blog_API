@@ -36,8 +36,21 @@ const getUserById = async (req, res) => {
   return res.status(200).json(user);
 };
 
+const deleteUser = async (req, res) => {
+  const { authorization } = req.headers;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage, id } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const { status } = await userService.deleteUser(id);
+
+  return res.status(status).json(null);
+};
+
 module.exports = {
   addUser,
   getAllUsers,
   getUserById,
+  deleteUser,
 };
