@@ -7,4 +7,6 @@ postRouter.post('/', postController.createPoste);
 
 postRouter.get('/', postController.getAllPosts);
 
+postRouter.get('/:id', postController.getAllPostsById);
+
 module.exports = postRouter;

@@ -28,7 +28,23 @@ const getAllPosts = async (req, res) => {
   return res.status(status).json(message);
 };
 
+const getAllPostsById = async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const { status, message } = await postService.getAllPostsById(id);
+
+  if (message === 'Post does not exist') return res.status(status).json({ message });
+
+  return res.status(status).json(message[0]);
+};
+
 module.exports = {
   createPoste,
   getAllPosts,
+  getAllPostsById,
 };
