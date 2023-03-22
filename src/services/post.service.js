@@ -43,8 +43,31 @@ const getAllPostsById = async (id) => {
   return { status: 200, message: posts };
 };
 
+const getPostById = async (id) => {
+  const response = await BlogPost.findByPk(id);
+
+  return response;
+};
+
+const updatePost = async ({ title, content, id }) => {
+  if (!title || !content || !id) {
+    return { status: 400, message: 'Some required fields are missing' };
+  }
+
+  await BlogPost.update(
+    { title, content, updated: new Date().toISOString() },
+    { where: { id } },
+    );
+  
+  const response = await getAllPostsById(id);
+
+  return { status: 200, message: response.message };
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getAllPostsById,
+  updatePost,
+  getPostById,
 };

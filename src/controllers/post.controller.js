@@ -43,8 +43,32 @@ const getAllPostsById = async (req, res) => {
   return res.status(status).json(message[0]);
 };
 
+const updatePost = async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+  const { title, content } = req.body;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage, id: userId } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const targetPost = await postService.getPostById(id);
+  console.log(targetPost.dataValues);
+
+  if (targetPost.dataValues.userId !== userId) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+
+  const { status, message } = await postService.updatePost({ title, content, id });
+
+  if (message === 'Some required fields are missing') return res.status(status).json({ message });
+
+  return res.status(status).json(message[0]);
+};
+
 module.exports = {
   createPoste,
   getAllPosts,
   getAllPostsById,
+  updatePost,
 };
