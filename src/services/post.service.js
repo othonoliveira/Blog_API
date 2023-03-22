@@ -64,10 +64,17 @@ const updatePost = async ({ title, content, id }) => {
   return { status: 200, message: response.message };
 };
 
+const deletePost = async (id) => {
+  BlogPost.destroy({ where: { id }, force: true });
+
+  return { status: 204 };
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getAllPostsById,
   updatePost,
   getPostById,
+  deletePost,
 };

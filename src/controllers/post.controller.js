@@ -53,7 +53,6 @@ const updatePost = async (req, res) => {
   if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
 
   const targetPost = await postService.getPostById(id);
-  console.log(targetPost.dataValues);
 
   if (targetPost.dataValues.userId !== userId) {
     return res.status(401).json({ message: 'Unauthorized user' });
@@ -66,9 +65,30 @@ const updatePost = async (req, res) => {
   return res.status(status).json(message[0]);
 };
 
+const deletePost = async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage, id: userId } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const targetPost = await postService.getPostById(id);
+  if (!targetPost) return res.status(404).json({ message: 'Post does not exist' });
+
+  if (targetPost.dataValues.userId !== userId) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+
+  const { status } = await postService.deletePost(id);
+
+  return res.status(status).json(null);
+};
+
 module.exports = {
   createPoste,
   getAllPosts,
   getAllPostsById,
   updatePost,
+  deletePost,
 };
