@@ -16,6 +16,19 @@ const createPoste = async (req, res) => {
   return res.status(status).json(message);
 };
 
+const getAllPosts = async (req, res) => {
+  const { authorization } = req.headers;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const { status, message } = await postService.getAllPosts();
+
+  return res.status(status).json(message);
+};
+
 module.exports = {
   createPoste,
+  getAllPosts,
 };

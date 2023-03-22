@@ -1,5 +1,5 @@
 const validateCategories = require('../middleware/validateCategories');
-const { BlogPost, PostCategory } = require('../models');
+const { BlogPost, PostCategory, User, Category } = require('../models');
 
 const createPost = async ({ userId, title, content, categoryIds: holder }) => {
   const categoryIds = [...new Set(holder)];
@@ -22,6 +22,16 @@ const createPost = async ({ userId, title, content, categoryIds: holder }) => {
   return { status: 201, message: response };
 };
 
+const getAllPosts = async () => {
+  const posts = await BlogPost.findAll({
+    include: [{ model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } },
+  ] });
+
+  return { status: 200, message: posts };
+};
+
 module.exports = {
   createPost,
+  getAllPosts,
 };

@@ -5,4 +5,6 @@ const postRouter = express.Router();
 
 postRouter.post('/', postController.createPoste);
 
+postRouter.get('/', postController.getAllPosts);
+
 module.exports = postRouter;
