@@ -16,6 +16,19 @@ const addCategory = async (req, res) => {
   return res.status(status).json(message);
 };
 
+const getAllCategories = async (req, res) => {
+  const { authorization } = req.headers;
+
+  const { email, 
+    status: tokenStatus, message: tokenMessage } = await tokenValidation(authorization);
+  if (!email) return res.status(tokenStatus).json({ message: tokenMessage });
+
+  const { status, message } = await categoryService.getAllCategories();
+
+  return res.status(status).json(message);
+};
+
 module.exports = {
   addCategory,
+  getAllCategories,
 };
